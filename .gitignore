@@ -53,3 +53,7 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+#NVAR dll's
+nvar.dll
+optix.1.dll
