@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using NVIDIA.VRWorksAudio.Internal;
+using System.Threading;
 
 [RequireComponent(typeof(AudioSource))]
 public class NVAR_Listener : MonoBehaviour {
     private AudioSource output;
     internal NVAR.Context context;
-    private NVAR.Material material;
+    private EventWaitHandle traceWaitHandle;
     //private AudioClip nextClip;
     public void SetData (float[][] data)
     {
@@ -24,22 +23,20 @@ public class NVAR_Listener : MonoBehaviour {
     }
 	// Use this for initialization
 	void Awake () {
+        traceWaitHandle = new EventWaitHandle(true, EventResetMode.AutoReset);
         output = GetComponent<AudioSource>();
-        //NVAR operations
         NVAR.Initialize(0);
         NVAR.Create(out context, "test", NVAR.EffectPreset.Low);
-        NVAR.CreateMaterial(context, out material);
-
         output.clip = AudioClip.Create("test", 220500, 2, 44100, false);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown("up"))
-        { 
-            NVAR.TraceAudio(context);
-        }
         NVAR.SetListenerLocation(context, gameObject.transform.position);
         NVAR.SetListenerOrientation(context, gameObject.transform.forward, gameObject.transform.up);
+        if (traceWaitHandle.WaitOne(0))
+        {
+            NVAR.TraceAudio(context, traceWaitHandle.SafeWaitHandle.DangerousGetHandle());
+        }
     }
 }
