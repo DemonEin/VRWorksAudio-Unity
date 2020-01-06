@@ -2274,6 +2274,7 @@ namespace NVIDIA.VRWorksAudio.Internal
         /// <param name="a_transform">The transform of the mesh</param>
         /// <param name="a_vertices">The array of vertices</param>
         /// <param name="a_faces">The array of faces</param>
+        /// <param name="a_numFaces">The number of <see cref="a_faces"/></param>
         /// <param name="a_material">The material applied to the mesh</param>
         /// <returns>
         ///     <para><see cref="Status.Success"/>: No error has occurred</para>
@@ -2282,7 +2283,7 @@ namespace NVIDIA.VRWorksAudio.Internal
         ///           <see cref="a_mesh"/>, <see cref="a_transform"/>, <see cref="a_vertices"/>, or <see cref="a_faces"/>
         ///           is NULL; or the <see cref="a_material"/> value is not valid.</para>
         /// </returns>
-        internal static Status CreateMesh(Context a_nvar, out Mesh a_mesh, UnityEngine.Matrix4x4 a_transform, Vector3[] a_vertices, int[] a_faces, Material a_material)
+        internal static Status CreateMesh(Context a_nvar, out Mesh a_mesh, UnityEngine.Matrix4x4 a_transform, Vector3[] a_vertices, int[] a_faces, int a_numFaces, Material a_material)
         {
             // Convert vertices array to NVAR type
             Float3[] nvarVertices = Array.ConvertAll(a_vertices, vertice => (Float3)vertice);
@@ -2290,7 +2291,7 @@ namespace NVIDIA.VRWorksAudio.Internal
             // Create NVAR mesh
             IntPtr nvarMesh;
             Status status = Internal_CreateMesh(a_nvar.pointer, out nvarMesh, (Matrix4x4)a_transform, nvarVertices, nvarVertices.Length,
-                a_faces, a_faces.Length, a_material.pointer);
+                a_faces, a_numFaces, a_material.pointer);
 
             // Create wrapped NVAR Mesh
             a_mesh = new Mesh(nvarMesh);
