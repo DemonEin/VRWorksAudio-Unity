@@ -4,7 +4,7 @@ using System.Threading;
 
 public class NVAR_Listener : MonoBehaviour {
     //used to determine the buffer length of filtered audio; if the Framerate goes below minFramerate, the filters will not be applied in time for proper playback; higher improves performance
-    public readonly float minFramerate = 10;
+    public float minFramerate;
     internal NVAR.Context context;
 
     private EventWaitHandle traceWaitHandle;
